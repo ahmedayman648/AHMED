@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDO STORE - متجر عملات الألعاب الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #283593;
+            --dark-color: #0a0a1a;
+            --light-color: #f8f9fa;
+            --accent-color: #00c853;
+            --whatsapp-color: #25D366;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --text-light: #666;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* رأس الموقع */
+        header {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            color: var(--accent-color);
+            font-size: 2rem;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .search-box {
+            flex: 0 0 40%;
+            display: flex;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-box button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-box button:hover {
+            background-color: #00e676;
+            transform: scale(1.05);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .user-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .user-action i {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .user-action:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--whatsapp-color);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .cart-action {
+            position: relative;
+        }
+        
+        /* شريط التنقل */
+        nav {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 8px;
+        }
+        
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .nav-features {
+            display: flex;
+            gap: 15px;
+            color: white;
+        }
+        
+        .nav-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        /* قسم البطل (Hero) */
+        .hero {
+            background: linear-gradient(rgba(10, 10, 26, 0.9), rgba(10, 10, 26, 0.9)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 200, 83, 0.1), transparent);
+        }
+        
+        .hero-content {
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero h1 span {
+            color: var(--accent-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background-color: #00e676;
+        }
+        
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-sm {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+        
+        .whatsapp-fixed {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: var(--whatsapp-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .whatsapp-fixed:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+        
+        /* قسم المميزات */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: var(--dark-color);
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 35px 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--accent-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        /* قسم الألعاب */
+        .games-section {
+            padding: 80px 0;
+            margin-bottom: 50px;
+        }
+        
+        .games-filter {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 12px 28px;
+            background-color: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.2);
+        }
+        
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+        
+        .game-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .game-header {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, #f8f9fa, white);
+        }
+        
+        .game-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+        
+        .game-category {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            background-color: #f5f5f5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .game-body {
+            padding: 25px;
+        }
+        
+        .coins-options {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .coin-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .coin-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(26, 35, 126, 0.05);
+            transform: translateX(-5px);
+        }
+        
+        .coin-option.selected {
+            border-color: var(--accent-color);
+            background-color: rgba(0, 200, 83, 0.1);
+        }
+        
+        .coin-amount {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .coin-price {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .currency {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .game-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 12px;
+        }
+        
+        /* سلة التسوق */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            left: -450px;
+            width: 420px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+            z-index: 1100;
+            transition: var(--transition);
+            overflow-y: auto;
+            padding: 25px;
+        }
+        
+        .cart-sidebar.active {
+            left: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .cart-header h3 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-cart:hover {
+            color: var(--danger-color);
+            transform: rotate(90deg);
+        }
+        
+        .cart-items {
+            margin-bottom: 30px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            background-color: var(--light-color);
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+        
+        .cart-item:hover {
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+        }
+        
+        .cart-item-info h4 {
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .cart-item-info p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        .cart-item-price {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+        
+        .remove-item:hover {
+            transform: scale(1.2);
+        }
+        
+        .cart-summary {
+            border-top: 2px solid #eee;
+            padding-top: 25px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+        
+        .total {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            padding-top: 20px;
+            border-top: 2px dashed #ddd;
+        }
+        
+        .cart-empty {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--text-light);
+        }
+        
+        .cart-empty i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+        
+        /* قسم الأسئلة الشائعة */
+        .faq-section {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 25px;
+            background-color: #f9f9f9;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-question i {
+            transition: var(--transition);
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 25px;
+            max-height: 500px;
+        }
+        
+        /* قسم الدفع */
+        .payment-section {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-top: 40px;
+        }
+        
+        .payment-method {
+            background-color: var(--light-color);
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .payment-method:hover, .payment-method.selected {
+            border-color: var(--whatsapp-color);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+        
+        .payment-method h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .payment-method p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .egp-badge {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+        
+        /* نافذة تأكيد الشراء */
+        .checkout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .checkout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .checkout-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            transform: translateY(50px);
+            transition: transform 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .checkout-modal.active .checkout-content {
+            transform: translateY(0);
+        }
+        
+        .checkout-icon {
+            font-size: 5rem;
+            color: var(--whatsapp-color);
+            margin-bottom: 25px;
+        }
+        
+        .checkout-content h2 {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-size: 2.2rem;
+        }
+        
+        .checkout-content p {
+            margin-bottom: 30px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .checkout-details {
+            background-color: var(--light-color);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: right;
+            border: 2px solid #eee;
+        }
+        
+        .checkout-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .checkout-detail:last-child {
+            border-bottom: none;
+        }
+        
+        .checkout-total {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #ddd;
+        }
+        
+        .order-number {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* التذييل */
+        footer {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 80px 0 25px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--accent-color);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-right: 10px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        
+        .social-link:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+        
+        /* تنسيقات للهواتف */
+        @media (max-width: 1200px) {
+            .games-container {
+                grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .search-box {
+                flex: 0 0 50%;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .nav-links {
+                gap: 10px;
+            }
+            
+            .cart-sidebar {
+                width: 380px;
+                left: -380px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .search-box {
+                width: 100%;
+                order: 3;
+                margin-top: 15px;
+            }
+            
+            .main-nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .cart-sidebar {
+                width: 100%;
+                left: -100%;
+            }
+            
+            .games-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .whatsapp-fixed {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+        
+        /* قناع الخلفية عند فتح السلة */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* أنيميشن للتحديثات */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- قناع الخلفية -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- زر الواتساب الثابت -->
+    <a href="https://wa.me/20123456789?text=مرحباً%20أريد%20الاستفسار%20عن%20عملات%20الألعاب" class="whatsapp-fixed" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- رأس الموقع -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="#" class="logo">
+                    <i class="fas fa-coins"></i>
+                    MEDO <span>STORE</span>
+                </a>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث عن عملات الألعاب...">
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="user-actions">
+                    <div class="user-action" id="userAccount">
+                        <i class="fas fa-user"></i>
+                        <span>حسابي</span>
+                    </div>
+                    <div class="user-action cart-action" id="cartBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>السلة</span>
+                        <div class="cart-count" id="cartCount">0</div>
+                    </div>
+                    <div class="user-action" id="balanceBtn">
+                        <i class="fas fa-wallet"></i>
+                        <span id="userBalance">0 ج.م</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav>
+                <div class="main-nav">
+                    <ul class="nav-links">
+                        <li><a href="#" class="active" data-section="home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                        <li><a href="#" data-section="games"><i class="fas fa-gamepad"></i> عملات الألعاب</a></li>
+                        <li><a href="#" data-section="faq"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
+                        <li><a href="#" data-section="payment"><i class="fab fa-whatsapp"></i> الدفع عبر واتساب</a></li>
+                    </ul>
+                    
+                    <div class="nav-features">
+                        <div class="nav-feature">
+                            <i class="fas fa-bolt"></i>
+                            <span>توصيل فوري</span>
+                        </div>
+                        <div class="nav-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>دفع آمن</span>
+                        </div>
+                        <div class="nav-feature">
+                            <i class="fas fa-tag"></i>
+                            <span>أفضل الأسعار</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- سلة التسوق -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>سلة التسوق</h3>
+            <button class="close-cart" id="closeCart"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <!-- سيتم إضافة العناصر هنا ديناميكياً -->
+            <div class="cart-empty" id="emptyCart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>سلة التسوق فارغة</p>
+            </div>
+        </div>
+        
+        <div class="cart-summary" id="cartSummary" style="display: none;">
+            <div class="summary-row">
+                <span>الإجمالي:</span>
+                <span id="cartSubtotal">0 ج.م</span>
+            </div>
+            <div class="summary-row">
+                <span>الرسوم:</span>
+                <span id="cartFees">0 ج.م</span>
+            </div>
+            <div class="summary-row total">
+                <span>المبلغ النهائي:</span>
+                <span id="cartTotal">0 ج.م</span>
+            </div>
+            
+            <button class="btn btn-whatsapp" style="width: 100%; margin-top: 25px; font-size: 1.1rem;" id="checkoutBtn">
+                <i class="fab fa-whatsapp"></i> اتمام الشراء عبر واتساب
+            </button>
+        </div>
+    </div>
+    
+    <!-- المحتوى الرئيسي -->
+    <main>
+        <!-- قسم البطل (Hero) -->
+        <section class="hero" id="homeSection">
+            <div class="container">
+                <div class="hero-content animate-fadeInUp">
+                    <h1>شراء <span>عملات الألعاب</span> أصبح أسهل من أي وقت مضى!</h1>
+                    <p>متجر MEDO STORE يوفر لك شراء عملات جميع الألعاب الإلكترونية بأسعار تنافسية وتوصيل فوري خلال دقائق. الدفع آمن ومضمون 100% عبر واتساب.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn btn-accent" id="shopNowBtn">اشتري الآن <i class="fas fa-arrow-left"></i></a>
+                        <a href="#" class="btn" id="viewGamesBtn">تصفح الألعاب <i class="fas fa-gamepad"></i></a>
+                        <a href="https://wa.me/20123456789" class="btn btn-whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> تواصل معنا مباشرة
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم المميزات -->
+        <section class="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>لماذا MEDO STORE أفضل خيار؟</h2>
+                </div>
+                <p class="section-subtitle">نوفر لك أفضل تجربة شراء لعملات الألعاب مع ضمان السرعة والأمان والجودة</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>الدفع عبر واتساب</h3>
+                        <p>دفع آمن وسريع عبر واتساب مع تأكيد فوري للطلب</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>توصيل فوري</h3>
+                        <p>استلام العملات خلال 2-5 دقائق فقط بعد التأكيد</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>ضمان 100%</h3>
+                        <p>ضمان استرجاع المبلغ في حالة أي مشكلة</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>دعم فني 24/7</h3>
+                        <p>فريق دعم فني متاح على مدار الساعة لمساعدتك</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم الألعاب -->
+        <section class="games-section" id="gamesSection">
+            <div class="container">
+                <div class="section-title">
+                    <h2>عملات الألعاب المتاحة</h2>
+                </div>
+                <p class="section-subtitle">أسعارنا تنافسية وجودتنا مضمونة 100% - جميع العملات أصلية</p>
+                
+                <div class="games-filter">
+                    <button class="filter-btn active" data-filter="all">الكل</button>
+                    <button class="filter-btn" data-filter="fortnite">فورت نايت</button>
+                    <button class="filter-btn" data-filter="pubg">ببجي</button>
+                    <button class="filter-btn" data-filter="cod">كول أوف ديوتي</button>
+                    <button class="filter-btn" data-filter="freefire">فري فاير</button>
+                    <button class="filter-btn" data-filter="valorant">فالورانت</button>
+                </div>
+                
+                <div class="games-container" id="gamesContainer">
+                    <!-- سيتم إضافة بطاقات الألعاب هنا ديناميكياً -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <p style="color: var(--text-light); margin-bottom: 20px;">جميع الأسعار بالجنيه المصري (ج.م)</p>
+                    <a href="https://wa.me/20123456789?text=مرحباً%20أريد%20الاستفسار%20عن%20أسعار%20جميع%20الألعاب" class="btn btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> استفسر عن أسعار جميع الألعاب
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم الأسئلة الشائعة -->
+        <section class="faq-section" id="faqSection">
+            <div class="container">
+                <div class="section-title">
+                    <h2>الأسئلة الشائعة</h2>
+                </div>
+                <p class="section-subtitle">إجابات على أكثر الأسئلة التي تهم عملائنا الكرام</p>
+                
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>كيف يتم الدفع عبر واتساب؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>بعد إضافة المنتجات إلى السلة، اضغط على زر "الدفع عبر واتساب" سيتم فتح محادثة واتساب مع رقم المتجر مع تفاصيل طلبك كاملة، فقط قم بإرسال الرسالة وسيقوم فريقنا بالرد عليك فوراً لتأكيد الطلب وتلقي الدفع.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>ما هو وقت التوصيل؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>نقوم بتوصيل العملات فوراً بعد تأكيد الدفع، عادة خلال 2-5 دقائق فقط. في بعض الحالات القصوى قد تصل إلى 15 دقيقة خلال أوقات الذروة.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>هل العملات أصلية وآمنة؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>نعم، جميع العملات التي نقدمها أصلية 100% ومصرح بها من قبل شركات الألعاب. نحن نتعامل مع موردين معتمدين فقط لضمان جودة وسلامة العملات.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>ماذا لو لم تصل العملات؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>في حالة عدم وصول العملات خلال 30 دقيقة، يرجى التواصل مع فريق الدعم عبر واتساب وسنقوم بحل المشكلة فوراً أو إرجاع المبلغ كاملاً بنسبة 100%.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>هل لديكم عروض وتخفيضات؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>نعم، نحن نقدم أسعار تنافسية أقل من المتاجر الرسمية بحوالي 10-15 جنيه لكل عبوة، بالإضافة إلى عروض خاصة للمشترين الدائمين وعروض الجمعة والأعياد.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>كيف أتأكد من أمان الدفع؟</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>نحن نتعامل عبر واتساب الرسمي للمتجر فقط، ولدينا سياسة عدم طلب أي معلومات شخصية أو بنكية. الدفع يتم بعد تأكيد الطلب فقط.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم الدفع عبر واتساب -->
+        <section class="payment-section" id="paymentSection">
+            <div class="container">
+                <div class="section-title">
+                    <h2>الدفع عبر واتساب</h2>
+                </div>
+                <p class="section-subtitle">طريقة دفع آمنة وسريعة ومباشرة مع فريقنا</p>
+                
+                <div class="payment-methods">
+                    <div class="payment-method selected">
+                        <div class="payment-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>الدفع عبر واتساب</h3>
+                        <p>أسرع وأأمن طريقة للدفع. تواصل مباشر مع فريق الدعم</p>
+                        <div class="egp-badge">جنيه مصري</div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>فودافون كاش</h3>
+                        <p>ادفع عبر فودافون كاش بكل سهولة</p>
+                        <div class="egp-badge">جنيه مصري</div>
+                    </div>
+                    
+                    <div class="payment-method">
+                        <div class="payment-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>تحويل بنكي</h3>
+                        <p>تحويل مباشر إلى الحساب البنكي</p>
+                        <div class="egp-badge">جنيه مصري</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #f8f9fa, white); border-radius: 15px;">
+                    <h3 style="margin-bottom: 20px; color: var(--dark-color);">خطوات الشراء عبر واتساب</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; text-align: right;">
+                        <div>
+                            <div style="background-color: var(--whatsapp-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 15px;">1</div>
+                            <h4>أضف المنتجات للسلة</h4>
+                            <p style="color: var(--text-light);">اختر العملات التي تريدها وأضفها إلى سلة التسوق</p>
+                        </div>
+                        <div>
+                            <div style="background-color: var(--whatsapp-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 15px;">2</div>
+                            <h4>اضغط زر واتساب</h4>
+                            <p style="color: var(--text-light);">اضغط على زر الدفع عبر واتساب في سلة التسوق</p>
+                        </div>
+                        <div>
+                            <div style="background-color: var(--whatsapp-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 15px;">3</div>
+                            <h4>تواصل مع فريقنا</h4>
+                            <p style="color: var(--text-light);">سيتم فتح محادثة واتساب مع تفاصيل طلبك كاملة</p>
+                        </div>
+                        <div>
+                            <div style="background-color: var(--whatsapp-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 15px;">4</div>
+                            <h4>استلم خلال دقائق</h4>
+                            <p style="color: var(--text-light);">بعد الدفع ستستلم العملات خلال 2-5 دقائق</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- نافذة تأكيد الشراء -->
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-content">
+            <div class="checkout-icon">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h2>جاهز للإرسال عبر واتساب!</h2>
+            <p>سيتم فتح محادثة واتساب مع تفاصيل طلبك. فقط اضغط إرسال وسيقوم فريقنا بالرد عليك فوراً.</p>
+            
+            <div class="order-number" id="orderNumber">
+                رقم الطلب: #MEDO-<span id="orderId">0000</span>
+            </div>
+            
+            <div class="checkout-details" id="checkoutDetails">
+                <!-- سيتم ملء تفاصيل الطلب هنا -->
+            </div>
+            
+            <div class="checkout-total" id="checkoutTotal">
+                0 ج.م
+            </div>
+            
+            <div style="margin: 30px 0; display: flex; gap: 15px; justify-content: center;">
+                <button class="btn btn-whatsapp" id="sendWhatsAppBtn">
+                    <i class="fab fa-whatsapp"></i> إرسال عبر واتساب الآن
+                </button>
+                <button class="btn" id="closeCheckout">إلغاء</button>
+            </div>
+            
+            <p style="color: var(--text-light); font-size: 0.95rem;">
+                رقم واتساب المتجر: <strong>01012345678</strong>
+            </p>
+        </div>
+    </div>
+    
+    <!-- التذييل -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MEDO STORE</h3>
+                    <p>أكبر متجر لشراء عملات الألعاب الإلكترونية في مصر. نوفر خدمة سريعة وآمنة مع ضمان الجودة 100%.</p>
+                    <div class="social-links">
+                        <a href="https://wa.me/20123456789" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>الألعاب المتاحة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> فورت نايت V-Bucks</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> ببجي موبايل UC</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> كول أوف ديوتي CP</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> فري فاير Diamonds</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> فالورانت Points</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> الأسئلة الشائعة</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> سياسة الخصوصية</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> شروط الخدمة</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> سياسة الإرجاع</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>معلومات الاتصال</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://wa.me/201559434607" target="_blank"><i class="fab fa-whatsapp"></i> واتساب: 01559434607</a></li>
+                        <li><a href="tel:01559434607"><i class="fas fa-phone"></i> هاتف: 01559434607</a></li>
+                        <li><a href="mailto:info@medostore.com"><i class="fas fa-envelope"></i> البريد: 315ahmadmahmad@gmail.com</a></li>
+                        <li><a href="#"><i class="fas fa-clock"></i> متاحون 24/24</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> مصر - القاهرة</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; 2026 MEDO STORE. جميع الأسعار بالجنيه المصري (ج.م)</p>
+                <p style="margin-top: 10px;">تصميم وبرمجة: احمد   صاحب متجر STORE</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- مكتبات JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    
+    <script>
+        // بيانات المتجر - أسعار أكثر من المتاجر الرسمية بـ 10 جنيه (بدون تخفيضات)
+        const storeData = {
+            user: {
+                balance: 0,
+                name: "guest"
+            },
+            games: [
+                {
+                    id: 1,
+                    name: "Fortnite",
+                    category: "fortnite",
+                    icon: "fab fa-fort-awesome",
+                    iconColor: "#FF66B2",
+                    coins: [
+                        { amount: "1,000 V-Bucks", price: 65, originalPrice: 65 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "2,800 V-Bucks", price: 155, originalPrice: 155 },
+                        { amount: "5,000 V-Bucks", price: 255, originalPrice: 255 },
+                        { amount: "13,500 V-Bucks", price: 615, originalPrice: 615 }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "PUBG Mobile",
+                    category: "pubg",
+                    icon: "fas fa-crosshairs",
+                    iconColor: "#FF9900",
+                    coins: [
+                        { amount: "60 UC", price: 55, originalPrice: 55 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "325 UC", price: 250, originalPrice: 250 },
+                        { amount: "660 UC", price: 490, originalPrice: 490 },
+                        { amount: "1,800 UC", price: 2010, originalPrice: 2010 }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Call of Duty",
+                    category: "cod",
+                    icon: "fas fa-skull-crossbones",
+                    iconColor: "#666666",
+                    coins: [
+                        { amount: "80 CP", price: 35, originalPrice: 35 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "500 CP", price: 195, originalPrice: 195 },
+                        { amount: "1,000 CP", price: 375, originalPrice: 375 },
+                        { amount: "2,400 CP", price: 855, originalPrice: 855 }
+                    ]
+                },
+                {
+                    id: 4,
+                    name: "Free Fire",
+                    category: "عروض لفترة محدودة",
+                    icon: "fas fa-fire",
+                        iconColor: "#FF3300",
+                    coins: [
+                        { amount: "100 Diamonds", price: 25, originalPrice: 25 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "500 Diamonds", price: 110, originalPrice: 110 },
+                        { amount: "1,000 Diamonds", price: 215, originalPrice: 215 },
+                        { amount: "2,000 Diamonds", price: 415, originalPrice: 415 }
+                    ]
+                },
+                {
+                    id: 5,
+                    name: "Valorant",
+                    category: "valorant",
+                    icon: "fas fa-bullseye",
+                    iconColor: "#FF3333",
+                    coins: [
+                        { amount: "125 Points", price: 30, originalPrice: 30 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "600 Points", price: 135, originalPrice: 135 },
+                        { amount: "1,275 Points", price: 265, originalPrice: 265 },
+                        { amount: "2,500 Points", price: 495, originalPrice: 495 }
+                    ]
+                },
+                {
+                    id: 6,
+                    name: "Bloud Strike",
+                    category: "bloud",
+                    icon: "fas fa-bomb",
+                    iconColor: "#8B0000",
+                    coins: [
+                        { amount: "100 نقطة", price: 20, originalPrice: 20 },  // سعر أعلى بـ 10 جنيه
+                        { amount: "500 نقطة", price: 90, originalPrice: 90 },
+                        { amount: "1,000 نقطة", price: 170, originalPrice: 170 },
+                        { amount: "2,000 نقطة", price: 330, originalPrice: 330 }
+                    ]
+                }
+            ],
+            cart: [],
+            paymentMethod: "whatsapp"
+        };
+
+        // DOM Elements
+        const cartBtn = document.getElementById('cartBtn');
+        const closeCart = document.getElementById('closeCart');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const overlay = document.getElementById('overlay');
+        const cartCount = document.getElementById('cartCount');
+        const cartItems = document.getElementById('cartItems');
+        const emptyCart = document.getElementById('emptyCart');
+        const cartSummary = document.getElementById('cartSummary');
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartFees = document.getElementById('cartFees');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const checkoutModal = document.getElementById('checkoutModal');
+        const closeCheckout = document.getElementById('closeCheckout');
+        const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
+        const checkoutDetails = document.getElementById('checkoutDetails');
+        const checkoutTotal = document.getElementById('checkoutTotal');
+        const orderId = document.getElementById('orderId');
+        const gamesContainer = document.getElementById('gamesContainer');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const userBalance = document.getElementById('userBalance');
+        const balanceBtn = document.getElementById('balanceBtn');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const shopNowBtn = document.getElementById('shopNowBtn');
+        const viewGamesBtn = document.getElementById('viewGamesBtn');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = {
+            home: document.getElementById('homeSection'),
+            games: document.getElementById('gamesSection'),
+            faq: document.getElementById('faqSection'),
+            payment: document.getElementById('paymentSection')
+        };
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        // تهيئة المتجر
+        document.addEventListener('DOMContentLoaded', function() {
+            // تعيين رصيد المستخدم
+            userBalance.textContent = `${storeData.user.balance} ج.م`;
+            
+            // تحميل الألعاب
+            loadGames();
+            
+            // تحميل سلة التسوق
+            updateCart();
+            
+            // إضافة المستمعين للأحداث
+            setupEventListeners();
+            
+            // إعداد الأسئلة الشائعة
+            setupFAQ();
+            
+            // توليد رقم طلب عشوائي
+            generateOrderId();
+            
+            // عرض رسالة ترحيب
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'مرحباً بك في MEDO STORE!',
+                    html: '🎮 <b>أفضل متجر لعملات الألعاب في مصر</b><br><br>✅ الدفع الآمن عبر واتساب<br>⚡ توصيل فوري خلال دقائق<br>💰 أسعار تنافسية',
+                    icon: 'success',
+                    confirmButtonText: 'ابدأ التسوق',
+                    confirmButtonColor: '#25D366',
+                    timer: 3000
+                });
+            }, 1500);
+        });
+
+        // تحميل الألعاب في الصفحة
+        function loadGames(filter = "all") {
+            gamesContainer.innerHTML = "";
+            
+            const filteredGames = filter === "all" 
+                ? storeData.games 
+                : storeData.games.filter(game => game.category === filter);
+            
+            filteredGames.forEach((game, index) => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card animate-fadeInUp';
+                gameCard.style.animationDelay = `${index * 0.1}s`;
+                gameCard.dataset.category = game.category;
+                
+                gameCard.innerHTML = `
+                    <div class="game-header">
+                        <div class="game-icon" style="background-color: ${game.iconColor}">
+                            <i class="${game.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 class="game-title">${game.name}</h3>
+                            <span class="game-category">${getCategoryName(game.category)}</span>
+                        </div>
+                    </div>
+                    <div class="game-body">
+                        <div class="coins-options" id="coins-${game.id}">
+                            ${game.coins.map((coin, index) => `
+                                <div class="coin-option" data-game="${game.id}" data-index="${index}">
+                                    <div>
+                                        <div class="coin-amount">${coin.amount}</div>
+                                        <small style="color: var(--accent-color); font-weight: 600;"> MEDO STORE </small>
+                                    </div>
+                                    <div>
+                                        <span class="coin-price">${coin.price}</span>
+                                        <span class="currency"> ج.م</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="game-footer">
+                        <button class="btn btn-sm" style="flex: 1;" data-game="${game.id}" data-action="add-all">
+                            <i class="fas fa-cart-plus"></i> أضف الجميع
+                        </button>
+                        <button class="btn btn-sm btn-accent" style="flex: 2;" data-game="${game.id}" data-action="best-value">
+                            <i class="fas fa-star"></i> أفضل قيمة
+                        </button>
+                    </div>
+                `;
+                
+                gamesContainer.appendChild(gameCard);
+            });
+            
+            // إضافة المستمعين لأزرار الألعاب
+            setupGameButtons();
+        }
+
+        // الحصول على اسم الفئة بالعربية
+        function getCategoryName(category) {
+            const categories = {
+                'fortnite': ' Fortnite',
+                'pubg': 'PUBG Mobile',
+                'cod': 'Call of Duty',
+                'freefire': 'Free Fire',
+                'valorant': 'Valorant',
+                'bloud': 'Bloud Strike'
+            };
+            return categories[category] || category;
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // فتح وإغلاق سلة التسوق
+            cartBtn.addEventListener('click', openCart);
+            closeCart.addEventListener('click', closeCartFunc);
+            overlay.addEventListener('click', closeCartFunc);
+            
+            // تصفية الألعاب
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    loadGames(this.dataset.filter);
+                    
+                    // تحريك الصفحة للأعلى قليلاً
+                    document.getElementById('gamesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+            
+            // البحث
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            // طرق الدفع
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    storeData.paymentMethod = this.querySelector('h3').textContent.includes('واتساب') ? 'whatsapp' : 'other';
+                });
+            });
+            
+            // إتمام الشراء عبر واتساب
+            checkoutBtn.addEventListener('click', checkout);
+            
+            // إرسال الطلب عبر واتساب
+            sendWhatsAppBtn.addEventListener('click', sendWhatsApp);
+            
+            // إغلاق نافذة التأكيد
+            closeCheckout.addEventListener('click', function() {
+                checkoutModal.classList.remove('active');
+            });
+            
+            // رصيد المستخدم
+            balanceBtn.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'رصيدك الحالي',
+                    html: `<div style="font-size: 3rem; color: #25D366; margin: 20px 0; font-weight: bold;">${storeData.user.balance} ج.م</div>
+                           <p>لتشحن رصيدك، راسلنا على واتساب:</p>
+                           <a href="https://wa.me/20123456789?text=أريد%20شحن%20رصيد%20في%20متجر%20MEDO%20STORE" 
+                              target="_blank" 
+                              style="display: inline-block; background-color: #25D366; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+                              <i class="fab fa-whatsapp"></i> شحن الرصيد عبر واتساب
+                           </a>`,
+                    icon: 'info',
+                    showConfirmButton: false,
+                    showCloseButton: true
+                });
+            });
+            
+            // التنقل بين الأقسام
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const section = this.dataset.section;
+                    Object.values(sections).forEach(sec => {
+                        if (sec) sec.style.display = 'none';
+                    });
+                    
+                    if (sections[section]) {
+                        sections[section].style.display = 'block';
+                        window.scrollTo({ top: sections[section].offsetTop - 100, behavior: 'smooth' });
+                    }
+                    
+                    if (section === 'games') {
+                        loadGames();
+                    }
+                });
+            });
+            
+            // أزرار الهيرو
+            shopNowBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('[data-section="games"]').click();
+            });
+            
+            viewGamesBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('[data-section="games"]').click();
+            });
+        }
+
+        // إعداد الأسئلة الشائعة
+        function setupFAQ() {
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    // إغلاق جميع العناصر الأخرى
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // فتح/إغلاق العنصر الحالي
+                    item.classList.toggle('active');
+                });
+            });
+        }
+
+        // إعداد أزرار الألعاب
+        function setupGameButtons() {
+            // أزرار اختيار عملات
+            document.querySelectorAll('.coin-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const gameId = this.dataset.game;
+                    const game = storeData.games.find(g => g.id == gameId);
+                    const coinIndex = this.dataset.index;
+                    
+                    // إضافة إلى السلة
+                    addToCart(game, coinIndex);
+                    
+                    // تأثير مرئي
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // زر إضافة جميع العروض
+            document.querySelectorAll('[data-action="add-all"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const gameId = this.dataset.game;
+                    const game = storeData.games.find(g => g.id == gameId);
+                    
+                    // تأثير الزر
+                    this.innerHTML = '<i class="fas fa-check"></i> تمت الإضافة';
+                    this.style.backgroundColor = 'var(--accent-color)';
+                    
+                    game.coins.forEach((coin, index) => {
+                        addToCart(game, index);
+                    });
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-cart-plus"></i> أضف الجميع';
+                        this.style.backgroundColor = '';
+                    }, 2000);
+                    
+                    Swal.fire({
+                        title: 'تمت الإضافة!',
+                        html: `تمت إضافة جميع عروض <b>${game.name}</b> إلى السلة`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top-end'
+                    });
+                });
+            });
+            
+            // زر أفضل قيمة (أقل سعر لكل وحدة)
+            document.querySelectorAll('[data-action="best-value"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const gameId = this.dataset.game;
+                    const game = storeData.games.find(g => g.id == gameId);
+                    
+                    // إيجاد أفضل قيمة (أقل سعر لكل 100 وحدة)
+                    let bestValueIndex = 0;
+                    let bestValue = Infinity;
+                    
+                    game.coins.forEach((coin, index) => {
+                        // استخراج الرقم من النص (مثال: "1,000 V-Bucks" -> 1000)
+                        const amount = parseInt(coin.amount.replace(/[^0-9]/g, ''));
+                        const valuePer100 = (coin.price / amount) * 100;
+                        
+                        if (valuePer100 < bestValue) {
+                            bestValue = valuePer100;
+                            bestValueIndex = index;
+                        }
+                    });
+                    
+                    // إضافة أفضل قيمة إلى السلة
+                    addToCart(game, bestValueIndex);
+                    
+                    // تأثير الزر
+                    this.innerHTML = '<i class="fas fa-check"></i> تمت الإضافة';
+                    this.style.backgroundColor = 'var(--accent-color)';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-star"></i> أفضل قيمة';
+                        this.style.backgroundColor = '';
+                    }, 2000);
+                    
+                    Swal.fire({
+                        title: 'أفضل قيمة!',
+                        html: `تمت إضافة أفضل عرض من <b>${game.name}</b> إلى السلة`,
+                        icon: 'info',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top-end'
+                    });
+                });
+            });
+        }
+
+        // إضافة منتج إلى السلة
+        function addToCart(game, coinIndex) {
+            const coin = game.coins[coinIndex];
+            
+            // التحقق إذا كان المنتج موجوداً بالفعل
+            const existingItemIndex = storeData.cart.findIndex(item => 
+                item.gameId === game.id && item.coinIndex === coinIndex
+            );
+            
+            if (existingItemIndex > -1) {
+                // زيادة الكمية إذا المنتج موجود
+                storeData.cart[existingItemIndex].quantity += 1;
+            } else {
+                // إضافة منتج جديد
+                storeData.cart.push({
+                    id: Date.now(),
+                    gameId: game.id,
+                    gameName: game.name,
+                    coinIndex: coinIndex,
+                    coinAmount: coin.amount,
+                    price: coin.price,
+                    originalPrice: coin.originalPrice,
+                    quantity: 1,
+                    icon: game.icon,
+                    iconColor: game.iconColor
+                });
+            }
+            
+            // تحديث السلة
+            updateCart();
+            
+            // فتح السلة تلقائياً إذا كانت مغلقة
+            if (!cartSidebar.classList.contains('active')) {
+                openCart();
+            }
+        }
+
+        // تحديث سلة التسوق
+        function updateCart() {
+            // تحديث العداد
+            const totalItems = storeData.cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // تحديث عناصر السلة
+            if (storeData.cart.length === 0) {
+                emptyCart.style.display = 'block';
+                cartSummary.style.display = 'none';
+            } else {
+                emptyCart.style.display = 'none';
+                cartSummary.style.display = 'block';
+                
+                // عرض العناصر
+                cartItems.innerHTML = '';
+                storeData.cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="game-icon" style="width: 50px; height: 50px; font-size: 1.5rem; background-color: ${item.iconColor}">
+                                <i class="${item.icon}"></i>
+                            </div>
+                            <div class="cart-item-info">
+                                <h4>${item.gameName}</h4>
+                                <p>${item.coinAmount}</p>
+                                <p style="color: var(--accent-color); font-size: 0.9rem;">الكمية: ${item.quantity}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: left;">
+                            <div class="cart-item-price">${item.price * item.quantity} ج.م</div>
+                            <button class="remove-item" data-id="${item.id}" title="حذف من السلة">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                
+                // إضافة مستمعي الأحداث لأزرار الحذف
+                document.querySelectorAll('.remove-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const itemId = parseInt(this.dataset.id);
+                        removeFromCart(itemId);
+                    });
+                });
+                
+                // حساب الإجماليات
+                const subtotal = storeData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const fees = Math.round(subtotal * 0.05); // رسوم خدمة 5%
+                const total = subtotal + fees;
+                
+                // تحديث الإجماليات
+                cartSubtotal.textContent = `${subtotal} ج.م`;
+                cartFees.textContent = `${fees} ج.م`;
+                cartTotal.textContent = `${total} ج.م`;
+            }
+            
+            // حفظ السلة في التخزين المحلي
+            localStorage.setItem('medoStoreCart', JSON.stringify(storeData.cart));
+        }
+
+        // إزالة منتج من السلة
+        function removeFromCart(itemId) {
+            const itemIndex = storeData.cart.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = storeData.cart[itemIndex];
+                storeData.cart.splice(itemIndex, 1);
+                updateCart();
+                
+                Swal.fire({
+                    title: 'تم الحذف!',
+                    html: `تمت إزالة <b>${item.coinAmount}</b> من <b>${item.gameName}</b> من السلة`,
+                    icon: 'info',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    position: 'top-end'
+                });
+            }
+        }
+
+        // فتح سلة التسوق
+        function openCart() {
+            cartSidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق سلة التسوق
+        function closeCartFunc() {
+            cartSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // إجراء البحث
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) {
+                loadGames();
+                return;
+            }
+            
+            // تصفية الألعاب
+            const filteredGames = storeData.games.filter(game => 
+                game.name.toLowerCase().includes(query) || 
+                getCategoryName(game.category).toLowerCase().includes(query)
+            );
+            
+            if (filteredGames.length === 0) {
+                gamesContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px 0;">
+                        <i class="fas fa-search" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                        <h3 style="color: var(--text-light); margin-bottom: 15px;">لم يتم العثور على نتائج</h3>
+                        <p style="color: var(--text-light);">جرب البحث بكلمات أخرى أو تصفح جميع الألعاب</p>
+                        <button class="btn" onclick="loadGames()" style="margin-top: 20px;">عرض جميع الألعاب</button>
+                    </div>
+                `;
+            } else {
+                loadGames();
+                
+                // إخفاء الألعاب التي لا تطابق البحث
+                document.querySelectorAll('.game-card').forEach(card => {
+                    const gameName = card.querySelector('.game-title').textContent.toLowerCase();
+                    const category = card.querySelector('.game-category').textContent.toLowerCase();
+                    
+                    if (!gameName.includes(query) && !category.includes(query)) {
+                        card.style.display = 'none';
+                    } else {
+                        card.style.display = 'block';
+                    }
+                });
+            }
+        }
+
+        // توليد رقم طلب عشوائي
+        function generateOrderId() {
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            orderId.textContent = randomId;
+            return randomId;
+        }
+
+        // إتمام عملية الشراء
+        function checkout() {
+            if (storeData.cart.length === 0) {
+                Swal.fire({
+                    title: 'السلة فارغة',
+                    text: 'الرجاء إضافة منتجات إلى السلة قبل إتمام الشراء',
+                    icon: 'warning',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#25D366'
+                });
+                return;
+            }
+            
+            // حساب الإجماليات
+            const subtotal = storeData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const fees = Math.round(subtotal * 0.05);
+            const total = subtotal + fees;
+            
+            // عرض تفاصيل الطلب
+            let detailsHTML = '';
+            storeData.cart.forEach(item => {
+                detailsHTML += `
+                    <div class="checkout-detail">
+                        <span>${item.gameName} - ${item.coinAmount} × ${item.quantity}</span>
+                        <span>${item.price * item.quantity} ج.م</span>
+                    </div>
+                `;
+            });
+            
+            detailsHTML += `
+                <div class="checkout-detail">
+                    <span>رسوم الخدمة (5%)</span>
+                    <span>${fees} ج.م</span>
+                </div>
+            `;
+            
+            checkoutDetails.innerHTML = detailsHTML;
+            checkoutTotal.textContent = `${total} ج.م`;
+            
+            // توليد رقم طلب جديد
+            generateOrderId();
+            
+            // عرض نافذة التأكيد
+            checkoutModal.classList.add('active');
+        }
+
+        // إرسال الطلب عبر واتساب
+        function sendWhatsApp() {
+            // حساب الإجماليات
+            const subtotal = storeData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const fees = Math.round(subtotal * 0.05);
+            const total = subtotal + fees;
+            
+            // بناء رسالة الواتساب
+            let message = `مرحباً، أريد شراء عملات الألعاب التالية من متجر MEDO STORE:\n\n`;
+            message += `📦 *رقم الطلب:* MEDO-${orderId.textContent}\n\n`;
+            
+            storeData.cart.forEach(item => {
+                message += `🎮 ${item.gameName}\n`;
+                message += `   ${item.coinAmount} × ${item.quantity} = ${item.price * item.quantity} ج.م\n\n`;
+            });
+            
+            message += `💰 *الإجمالي:* ${subtotal} ج.م\n`;
+            message += `💼 *رسوم الخدمة:* ${fees} ج.م\n`;
+            message += `✅ *المبلغ النهائي:* ${total} ج.م\n\n`;
+            message += `اسمي: ${storeData.user.name}\n`;
+            message += `طريقة الدفع المفضلة: عبر واتساب`;
+            
+            // تشفير الرسالة للرابط
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/201559434607?text=${encodedMessage}`;
+            
+            // فتح الواتساب
+            window.open(whatsappUrl, '_blank');
+            
+            // عرض رسالة تأكيد
+            Swal.fire({
+                title: 'تم فتح واتساب!',
+                html: 'تم فتح محادثة واتساب مع تفاصيل طلبك.<br>فقط اضغط <b>إرسال</b> وسنرد عليك فوراً.',
+                icon: 'success',
+                confirmButtonText: 'تم',
+                confirmButtonColor: '#25D366'
+            });
+            
+            // إغلاق النافذة بعد 2 ثانية
+            setTimeout(() => {
+                checkoutModal.classList.remove('active');
+                
+                // تفريغ السلة بعد إرسال الطلب
+                storeData.cart = [];
+                updateCart();
+                closeCartFunc();
+            }, 2000);
+        }
+
+        // تحميل السلة من التخزين المحلي (إذا وجدت)
+        const savedCart = localStorage.getItem('medoStoreCart');
+        if (savedCart) {
+            try {
+                storeData.cart = JSON.parse(savedCart);
+                updateCart();
+            } catch (e) {
+                console.log('خطأ في تحميل سلة التسوق:', e);
+            }
+        }
+    </script>
+</body>
+</html>
