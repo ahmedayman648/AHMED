@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دردشة</title>
+<style>
+:root{--bg:#eef3f2;--panel:#fff;--ink:#14292b;--mute:#6b8082;--line:#dbe5e4;--brand:#0e7c7b;--brand-ink:#fff;--mine:#cdeee9;--theirs:#fff;--chat-bg:#e4ecea;--tick:#2a8fd6}
+@media (prefers-color-scheme:dark){:root{--bg:#0c1516;--panel:#132022;--ink:#e6f1f0;--mute:#8aa3a4;--line:#223537;--brand:#2bb3a8;--brand-ink:#04201f;--mine:#0f4f4a;--theirs:#1b2e30;--chat-bg:#0e1b1c;--tick:#58b6f0}}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{font-family:Tajawal,Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);display:flex;justify-content:center;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.auth{display:flex;align-items:center;justify-content:center;width:100%;padding:16px}
+.box{background:var(--panel);border-radius:18px;padding:22px;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;border:1px solid var(--line)}
+.box h1{color:var(--brand);font-size:26px}
+.box h2{font-size:15px;margin-top:6px}
+.box form{display:flex;flex-direction:column;gap:12px}
+.tabs{display:flex;background:var(--bg);border-radius:10px;padding:4px}
+.tabs button{flex:1;border:0;background:none;padding:8px;border-radius:8px;cursor:pointer}
+.tabs button.on{background:var(--panel);font-weight:700}
+label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:4px}
+input[type=text],input[type=password],input[type=tel],input:not([type]){border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:11px 12px}
+.btn{border:0;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--bg)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.pri{background:var(--brand);color:var(--brand-ink);font-weight:700}
+.err{color:#d33;font-size:13px;min-height:16px}
+.bigid{font-size:24px;font-weight:700;letter-spacing:1px;direction:ltr;text-align:center;background:var(--bg);border-radius:12px;padding:16px 8px;word-spacing:6px;color:var(--brand);overflow-wrap:anywhere}
+.note{font-size:13px;color:var(--mute);line-height:1.7}
+.app{display:flex;width:100%;max-width:1100px;height:100%;background:var(--panel)}
+.side{width:340px;border-inline-end:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.top{padding:12px 14px;display:flex;align-items:center;gap:8px}
+.mecard{display:flex;align-items:center;gap:10px;min-width:0;flex:1;cursor:pointer;background:none;border:0;text-align:start}
+.top .btns{display:flex;flex:none}
+.icon{background:none;border:0;cursor:pointer;font-size:19px;padding:6px;border-radius:8px}
+.search{margin:0 14px 10px;padding:10px 14px;width:calc(100% - 28px)}
+.list{overflow-y:auto;flex:1}
+.row{display:flex;gap:12px;align-items:center;padding:12px 16px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;text-align:start}
+.row:hover,.row.on{background:var(--bg)}
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;color:#fff;font-size:18px;position:relative}
+.av.s{width:36px;height:36px;font-size:15px}
+.av img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.av.online::after{content:"";position:absolute;bottom:0;inset-inline-start:0;width:12px;height:12px;border-radius:50%;background:#3ccf6e;border:2px solid var(--panel)}
+.meta{flex:1;min-width:0}
+.meta b{display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta span{display:block;font-size:13px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-end{font-size:12px;color:var(--mute);display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.badge{background:var(--brand);color:var(--brand-ink);border-radius:10px;padding:0 7px;font-size:12px;font-weight:700}
+.botb{font-size:10px;background:var(--brand);color:var(--brand-ink);border-radius:6px;padding:1px 5px;margin-inline-start:4px;font-weight:400}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--chat-bg)}
+.chatbox{display:flex;flex-direction:column;flex:1;min-height:0}
+.head{background:var(--panel);padding:10px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.head .meta{cursor:pointer}
+.back{display:none}
+.msgs{flex:1;overflow-y:auto;padding:18px 5%;display:flex;flex-direction:column;gap:6px}
+.msg{max-width:min(78%,460px);padding:8px 12px 6px;border-radius:14px;line-height:1.6;background:var(--theirs);align-self:flex-start;border-start-start-radius:4px;overflow-wrap:anywhere;white-space:pre-wrap}
+.msg.me{background:var(--mine);align-self:flex-end;border-start-start-radius:14px;border-start-end-radius:4px}
+.msg small{display:block;font-size:11px;color:var(--mute);text-align:end;margin-top:2px}
+.fn{display:block;font-size:12px;font-weight:700;margin-bottom:2px}
+.sys{align-self:center;background:var(--panel);color:var(--mute);font-size:12px;padding:4px 12px;border-radius:12px;text-align:center}
+.media{display:block;max-width:100%;max-height:340px;border-radius:10px;margin-bottom:4px}
+img.media{cursor:zoom-in}
+audio{width:250px;max-width:100%;display:block}
+.tick{letter-spacing:-3px}.tick.read{color:var(--tick)}
+.typing{align-self:flex-start;background:var(--theirs);border-radius:14px;padding:10px 14px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--mute);animation:b 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-4px);opacity:.5}}
+@keyframes blink{50%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.typing i,.dot{animation:none}}
+.bar{background:var(--panel);padding:10px 12px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--line)}
+.bar input#in{flex:1;border-radius:22px;padding:11px 16px;min-width:0}
+.send{background:var(--brand);color:var(--brand-ink);border:0;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:18px;flex:none}
+.bar .rec{display:none}
+.bar.recording>:not(.rec){display:none}
+.bar.recording .rec{display:flex;flex:1;align-items:center;gap:10px}
+.dot{width:10px;height:10px;border-radius:50%;background:#e33;animation:blink 1s infinite}
+.lock{text-align:center;color:var(--mute);padding:14px;background:var(--panel);border-top:1px solid var(--line);font-size:14px}
+.empty{margin:auto;color:var(--mute);text-align:center;padding:20px;line-height:1.8}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9}
+.photo{display:flex;align-items:center;gap:12px}
+.photo .av{width:72px;height:72px;font-size:28px}
+.row2{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;align-items:center}
+.mrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.mrow .acts{display:flex;gap:4px;flex-wrap:wrap}
+.chk{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:14px}
+.chk input{width:18px;height:18px}
+.checks{max-height:200px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px;display:flex;flex-direction:column;gap:6px}
+.tok{direction:ltr;text-align:left;font-family:monospace;font-size:13px;background:var(--bg);padding:10px;border-radius:10px;overflow-wrap:anywhere}
+#toast{position:fixed;bottom:24px;inset-inline:0;margin:auto;width:max-content;max-width:90%;background:#222;color:#fff;padding:10px 16px;border-radius:10px;z-index:20}
+@media (max-width:720px){
+.side{width:100%;border:0}.main{display:none;width:100%}
+.app.in-chat .side{display:none}.app.in-chat .main{display:flex}
+.back{display:block}}
+</style>
+</head>
+<body>
+
+<div class="auth" id="auth">
+  <div class="box">
+    <h1>دردشة</h1>
+    <div id="forms">
+      <div class="tabs"><button id="tab-reg" class="on" type="button">حساب جديد</button><button id="tab-log" type="button">دخول</button></div>
+      <form id="f-reg" style="margin-top:14px">
+        <label>اسمك<input id="rname" maxlength="30" required autocomplete="off"></label>
+        <label>كلمة السر (6 أحرف على الأقل)<input id="rpass" type="password" minlength="6" required autocomplete="new-password"></label>
+        <div class="err" id="rerr"></div>
+        <button class="btn pri">إنشاء الحساب</button>
+        <p class="note">هتاخد رقم عشوائي من 15 رقم، وده اللي الناس هتضيفك بيه.</p>
+      </form>
+      <form id="f-log" hidden style="margin-top:14px">
+        <label>رقمك (15 رقم)<input id="lid" inputmode="numeric" dir="ltr" required autocomplete="username"></label>
+        <label>كلمة السر<input id="lpass" type="password" required autocomplete="current-password"></label>
+        <div class="err" id="lerr"></div>
+        <button class="btn pri">دخول</button>
+      </form>
+    </div>
+    <div id="done" hidden style="display:none;flex-direction:column;gap:14px">
+      <p>تم إنشاء حسابك. ده رقمك:</p>
+      <div class="bigid" id="myid"></div>
+      <button class="btn" id="copy1" type="button">نسخ الرقم</button>
+      <p class="note">احفظ الرقم وكلمة السر. مفيش طريقة لاسترجاع الحساب لو ضاعوا. ابعت الرقم لأي حد عايز يكلمك.</p>
+      <button class="btn pri" id="go" type="button">ابدأ المحادثة</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <div class="top">
+      <button class="mecard" id="mecard" aria-label="الإعدادات"><div class="av s" id="myav"></div><div class="meta"><b id="myname"></b><span id="mynum"></span></div></button>
+      <div class="btns">
+        <button class="icon" id="add" aria-label="إضافة جهة اتصال" title="إضافة جهة اتصال">➕</button>
+        <button class="icon" id="newg" aria-label="جروب جديد" title="جروب جديد">👥</button>
+        <button class="icon" id="set" aria-label="الإعدادات" title="الإعدادات">⚙️</button>
+      </div>
+    </div>
+    <input class="search" id="q" placeholder="ابحث بالاسم أو الرقم" aria-label="بحث">
+    <div class="list" id="list"></div>
+  </aside>
+  <section class="main">
+    <div class="empty" id="noChat">اختر محادثة، أو اضغط ➕ وأضف رقم صديقك المكوّن من 15 رقم،<br>أو 👥 لإنشاء جروب.</div>
+    <div class="chatbox" id="chatbox" hidden>
+      <div class="head"><button class="icon back" id="back" aria-label="رجوع">➜</button><div class="av" id="hav"></div><div class="meta" id="hmeta"><b id="hname"></b><span id="hsub"></span></div></div>
+      <div class="msgs" id="msgs"></div>
+      <div class="bar" id="bar">
+        <button class="icon" id="attach" aria-label="إرفاق" title="صورة أو فيديو أو ملف صوتي">📎</button>
+        <input type="file" id="file" accept="image/*,video/*,audio/*" multiple hidden>
+        <input id="in" placeholder="اكتب رسالة" aria-label="رسالة" autocomplete="off" maxlength="2000">
+        <button class="icon" id="mic" aria-label="تسجيل صوتي" title="تسجيل صوتي">🎤</button>
+        <button class="send" id="send" aria-label="إرسال">➤</button>
+        <div class="rec"><span class="dot"></span><b id="rt">0:00</b><span style="flex:1"></span><button class="btn" id="rcancel" type="button">إلغاء</button><button class="send" id="rsend" type="button" aria-label="إرسال التسجيل">➤</button></div>
+      </div>
+      <div class="lock" id="lock" hidden>المشرفين فقط يقدروا يرسلوا رسائل في الجروب ده</div>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="m-add" hidden><div class="box" role="dialog" aria-label="إضافة جهة اتصال">
+  <h1 style="font-size:20px">محادثة جديدة</h1>
+  <label>رقم صديقك (15 رقم)<input id="aid" inputmode="numeric" dir="ltr" autocomplete="off"></label>
+  <div class="err" id="aerr"></div>
+  <div class="row2"><button class="btn" data-close type="button">إلغاء</button><button class="btn pri" id="asave" type="button">ابدأ المحادثة</button></div>
+</div></div>
+
+<div class="modal" id="m-newg" hidden><div class="box" role="dialog" aria-label="جروب جديد">
+  <h1 style="font-size:20px">جروب جديد</h1>
+  <label>اسم الجروب<input id="gn" maxlength="30" autocomplete="off"></label>
+  <label>اختار الأعضاء من جهات اتصالك (تقدر تضيف غيرهم بالرقم بعدين)</label>
+  <div class="checks" id="gchecks"></div>
+  <div class="err" id="gerr"></div>
+  <div class="row2"><button class="btn" data-close type="button">إلغاء</button><button class="btn pri" id="gcreate" type="button">إنشاء الجروب</button></div>
+</div></div>
+
+<div class="modal" id="m-grp" hidden><div class="box" role="dialog" aria-label="معلومات الجروب" id="grp"></div></div>
+
+<div class="modal" id="m-set" hidden><div class="box" role="dialog" aria-label="الإعدادات">
+  <h1 style="font-size:20px">الإعدادات</h1>
+  <div class="photo"><div class="av" id="sphoto"></div><label>الصورة الشخصية<input type="file" id="sfile" accept="image/*"></label></div>
+  <label>الاسم<input id="sname" maxlength="30"></label>
+  <label>رقمك<input id="snum" readonly dir="ltr"></label>
+  <div class="err" id="serr"></div>
+  <div class="row2"><button class="btn" id="copy2" type="button">نسخ الرقم</button><button class="btn" id="logout" type="button">تسجيل خروج</button></div>
+  <h2>بوتاتي</h2>
+  <p class="note">اعمل بوت بيتحكم فيه برنامجك الخاص (شوف ملف example-bot.js).</p>
+  <div id="botlist"></div>
+  <div class="row2"><input id="bname" maxlength="30" placeholder="اسم البوت" style="flex:1;min-width:0"><button class="btn" id="bcreate" type="button">إنشاء بوت</button></div>
+  <div class="err" id="berr"></div>
+  <div class="row2"><button class="btn" data-close type="button">إلغاء</button><button class="btn pri" id="ssave" type="button">حفظ</button></div>
+</div></div>
+
+<div class="modal" id="m-tok" hidden><div class="box" role="dialog" aria-label="توكن البوت">
+  <h1 style="font-size:20px">تم إنشاء البوت</h1>
+  <p class="note">ده التوكن بتاع البوت. انسخه دلوقتي لأنه مش هيظهر تاني، ومتشاركوش مع حد.</p>
+  <div class="tok" id="tokv"></div>
+  <div class="row2"><button class="btn" id="tokcopy" type="button">نسخ التوكن</button><button class="btn pri" data-close type="button">تم</button></div>
+</div></div>
+
+<div class="modal" id="lb" hidden><img id="lbi" alt="" style="max-width:100%;max-height:92vh;border-radius:8px"></div>
+<div id="toast" hidden></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = id => id.replace(/(\d{3})(?=\d)/g, '$1 ');
+const COLS = ['#0e7c7b','#b4562c','#6a4fb3','#2a6fb0','#8a6d1c','#b03a6a'];
+const colorOf = id => COLS[[...String(id)].reduce((a,c)=>a+c.charCodeAt(0),0) % COLS.length];
+const isG = id => typeof id === 'string' && id[0] === 'g';
+const first = n => Array.from(n || '؟')[0];
+const S = { me: null, contacts: {}, groups: {}, msgs: {}, cur: null, typing: {}, catalog: [], myBots: [] };
+let socket = null, tmpPhoto = '', tmpGPhoto, toastT, typingOff, stick = true, rec = null;
+
+function toast(t, keep){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toastT);if(!keep)toastT=setTimeout(()=>e.hidden=true,2400)}
+function copy(t){navigator.clipboard.writeText(t).then(()=>toast('تم النسخ'),()=>toast('انسخه يدويًا'))}
+function avHtml(u){return u.photo?`<img src="${esc(u.photo)}" alt="">`:(u.isGroup?'👥':esc(first(u.name)))}
+function setAv(el,u){el.style.background=colorOf(u.id);el.innerHTML=avHtml(u)}
+function modal(id,open){$(id).hidden=!open}
+async function api(p,b){
+  const r=await fetch('/api/'+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||'حصل خطأ، حاول تاني');
+  return d;
+}
+const timeOf = ts => new Date(ts).toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'});
+const dayOf = ts => { const d=new Date(ts); return d.toDateString()===new Date().toDateString()?timeOf(ts):d.toLocaleDateString('ar-EG',{day:'numeric',month:'short'}); };
+const seen = () => { try { return JSON.parse(localStorage.seen || '{}'); } catch { return {}; } };
+function setSeen(id, ts){ const s=seen(); s[id]=ts; localStorage.seen=JSON.stringify(s); }
+const info = id => isG(id) ? S.groups[id] : S.contacts[id];
+const peerOf = m => isG(m.to) ? m.to : (m.from === S.me.id ? m.to : m.from);
+
+// ---------- التسجيل والدخول ----------
+function tab(reg){$('#f-reg').hidden=!reg;$('#f-log').hidden=reg;$('#tab-reg').classList.toggle('on',reg);$('#tab-log').classList.toggle('on',!reg)}
+$('#tab-reg').onclick=()=>tab(true);$('#tab-log').onclick=()=>tab(false);
+$('#f-reg').onsubmit=async e=>{
+  e.preventDefault();$('#rerr').textContent='';
+  try{
+    const d=await api('register',{name:$('#rname').value,password:$('#rpass').value});
+    localStorage.token=d.token;$('#myid').textContent=fmt(d.id);
+    $('#forms').hidden=true;const dn=$('#done');dn.hidden=false;dn.style.display='flex';
+  }catch(er){$('#rerr').textContent=er.message}
+};
+$('#copy1').onclick=()=>copy($('#myid').textContent.replace(/\s/g,''));
+$('#go').onclick=connect;
+$('#f-log').onsubmit=async e=>{
+  e.preventDefault();$('#lerr').textContent='';
+  try{const d=await api('login',{id:$('#lid').value.replace(/\D/g,''),password:$('#lpass').value});localStorage.token=d.token;connect()}
+  catch(er){$('#lerr').textContent=er.message}
+};
+function logout(){localStorage.removeItem('token');location.reload()}
+
+// ---------- الرسائل ----------
+function senderName(m){
+  if(m.from===S.me.id)return 'أنت';
+  const g=S.groups[m.to],mem=g&&g.members.find(x=>x.id===m.from);
+  return (mem&&mem.name)||(S.contacts[m.from]&&S.contacts[m.from].name)||m.fn||'؟';
+}
+function isBotId(m){const g=S.groups[m.to],mem=g&&g.members.find(x=>x.id===m.from);return !!(mem&&mem.bot)||!!(S.contacts[m.from]&&S.contacts[m.from].bot)}
+function addMsg(m){
+  const p=peerOf(m),a=S.msgs[p]||(S.msgs[p]=[]);
+  if(!a.some(x=>x.id===m.id))a.push(m);
+  return p;
+}
+function preview(m){
+  if(!m)return '';
+  let t=m.type==='image'?'📷 صورة':m.type==='video'?'🎥 فيديو':m.type==='audio'?'🎤 رسالة صوتية':m.text;
+  if(m.text&&m.type!=='text'&&m.type!=='system')t+=' '+m.text;
+  if(isG(m.to)&&m.type!=='system')t=senderName(m)+': '+t;
+  return t;
+}
+function unread(id){
+  const a=S.msgs[id]||[];
+  if(!isG(id))return a.filter(x=>x.from===id&&x.status!=='read').length;
+  const t=seen()[id]||0;
+  return a.filter(x=>x.type!=='system'&&x.from!==S.me.id&&x.ts>t).length;
+}
+function markChat(p){
+  if(document.hidden||!socket)return;
+  const a=S.msgs[p]||[];
+  if(isG(p)){if(a.length)setSeen(p,a[a.length-1].ts);renderList();return}
+  if(!a.some(m=>m.from===p&&m.status!=='read'))return;
+  a.forEach(m=>{if(m.from===p)m.status='read'});
+  socket.emit('msg:read',p);renderList();
+}
+document.addEventListener('visibilitychange',()=>{if(S.cur)markChat(S.cur)});
+
+// ---------- الاتصال ----------
+function connect(){
+  $('#auth').hidden=true;
+  socket=io({auth:{token:localStorage.token}});
+  socket.on('connect_error',e=>{if(e.message==='auth')logout()});
+  socket.on('sync',d=>{
+    S.me=d.me;S.contacts={};S.groups={};S.msgs={};S.catalog=d.catalog||[];S.myBots=d.myBots||[];
+    d.contacts.forEach(c=>S.contacts[c.id]=c);
+    d.groups.forEach(g=>S.groups[g.id]=g);
+    d.messages.forEach(addMsg);
+    const sn=seen();
+    Object.keys(S.groups).forEach(id=>{if(sn[id]===undefined){const a=S.msgs[id]||[];setSeen(id,a.length?a[a.length-1].ts:0)}});
+    $('#app').hidden=false;renderMe();renderList();
+    if(S.cur&&info(S.cur)){renderHead();renderMsgs();updateBar();markChat(S.cur)}
+  });
+  socket.on('contact:new',c=>{S.contacts[c.id]=c;renderList()});
+  socket.on('contact:update',c=>{S.contacts[c.id]=c;renderList();if(S.cur===c.id)renderHead();if(S.cur)renderMsgs()});
+  socket.on('presence',p=>{const c=S.contacts[p.id];if(c){c.online=p.online;renderList();if(S.cur===p.id)renderHead()}});
+  socket.on('group:upsert',g=>{
+    S.groups[g.id]=g;renderList();
+    if(S.cur===g.id){renderHead();updateBar();renderMsgs()}
+    if(!$('#m-grp').hidden&&S.cur===g.id)renderGrp();
+  });
+  socket.on('group:remove',d=>{
+    delete S.groups[d.id];delete S.msgs[d.id];
+    if(S.cur===d.id)closeChat();
+    modal('#m-grp',false);renderList();
+  });
+  socket.on('msg:new',m=>{
+    const p=addMsg(m);renderList();
+    if(S.cur===p){renderMsgs();if(m.from!==S.me.id)markChat(p)}
+  });
+  socket.on('msg:status',d=>{
+    (S.msgs[d.peer]||[]).forEach(m=>{
+      if(m.from!==S.me.id)return;
+      if(d.status==='read')m.status='read';else if(m.status==='sent')m.status='delivered';
+    });
+    if(S.cur===d.peer)renderMsgs();
+  });
+  socket.on('typing',d=>{
+    const g=S.groups[d.chat],mem=g&&g.members.find(x=>x.id===d.from);
+    S.typing[d.chat]=d.on?((mem&&mem.name)||'أحد الأعضاء'):false;
+    clearTimeout(S['t'+d.chat]);
+    if(d.on)S['t'+d.chat]=setTimeout(()=>{S.typing[d.chat]=false;if(S.cur===d.chat){renderHead();renderMsgs()}},4000);
+    if(S.cur===d.chat){renderHead();renderMsgs()}
+  });
+}
+
+// ---------- العرض ----------
+function renderMe(){setAv($('#myav'),S.me);$('#myname').textContent=S.me.name;$('#mynum').textContent=fmt(S.me.id)}
+function renderList(){
+  const q=$('#q').value.trim().replace(/\s/g,'');
+  const last=id=>{const a=S.msgs[id]||[];return a[a.length-1]};
+  const all=[...Object.values(S.groups),...Object.values(S.contacts)]
+    .filter(c=>!q||c.name.includes(q)||c.id.includes(q))
+    .sort((a,b)=>((last(b.id)||{}).ts||0)-((last(a.id)||{}).ts||0));
+  $('#list').innerHTML=all.map(c=>{
+    const m=last(c.id),un=unread(c.id);
+    return `<button class="row ${S.cur===c.id?'on':''}" data-id="${c.id}"><div class="av ${c.online?'online':''}" style="background:${colorOf(c.id)}">${avHtml(c)}</div><div class="meta"><b>${esc(c.name)}${c.bot?'<span class="botb">بوت</span>':''}</b><span>${m?esc(preview(m)):(c.isGroup?'جروب':fmt(c.id))}</span></div><div class="side-end"><span>${m?dayOf(m.ts):''}</span>${un?`<span class="badge">${un}</span>`:''}</div></button>`;
+  }).join('')||'<div class="empty">لسه مفيش محادثات.<br>اضغط ➕ أو 👥 للبدء.</div>';
+}
+function renderHead(){
+  const c=info(S.cur);if(!c)return;
+  const av=$('#hav');setAv(av,c);av.classList.toggle('online',!!c.online);
+  $('#hname').innerHTML=esc(c.name)+(c.bot?'<span class="botb">بوت</span>':'');
+  $('#hsub').textContent=S.typing[c.id]?(c.isGroup?S.typing[c.id]+' يكتب الآن...':'يكتب الآن...')
+    :c.isGroup?c.members.length+' عضو - اضغط لعرض المعلومات'
+    :(c.bot?'بوت':(c.online?'متصل':'غير متصل'))+' | '+fmt(c.id);
+}
+function updateBar(){
+  const g=S.groups[S.cur],locked=!!g&&g.onlyAdmins&&!g.admins.includes(S.me.id);
+  $('#bar').hidden=locked;$('#lock').hidden=!locked;
+}
+function bodyOf(m){
+  const mine=m.from===S.me.id;let h='';
+  if(isG(m.to)&&!mine)h+=`<b class="fn" style="color:${colorOf(m.from)}">${esc(senderName(m))}${isBotId(m)?'<span class="botb">بوت</span>':''}</b>`;
+  if(m.type==='image')h+=`<img class="media" loading="lazy" src="${esc(m.url)}" alt="صورة">`;
+  else if(m.type==='video')h+=`<video class="media" controls preload="metadata" src="${esc(m.url)}"></video>`;
+  else if(m.type==='audio')h+=`<audio controls preload="metadata" src="${esc(m.url)}"></audio>`;
+  if(m.text)h+=`<div>${esc(m.text)}</div>`;
+  return h+`<small>${timeOf(m.ts)} <span class="tick"></span></small>`;
+}
+function setTick(n,m){
+  const t=n.querySelector('.tick');if(!t)return;
+  if(m.from!==S.me.id){t.textContent='';return}
+  t.textContent=(isG(m.to)||m.status==='sent')?'✓':'✓✓';
+  t.classList.toggle('read',m.status==='read'&&!isG(m.to));
+}
+// تحديث تدريجي: الرسائل القديمة (والصوت والفيديو) ما بتتعاد كتابتها
+function renderMsgs(){
+  const box=$('#msgs');
+  if(box.dataset.chat!==S.cur){box.innerHTML='';box.dataset.chat=S.cur;stick=true}
+  const old=box.querySelector('.typing');if(old)old.remove();
+  const have={};box.querySelectorAll('[data-id]').forEach(n=>have[n.dataset.id]=n);
+  (S.msgs[S.cur]||[]).forEach(m=>{
+    let n=have[m.id];
+    if(!n){
+      n=document.createElement('div');n.dataset.id=m.id;
+      if(m.type==='system'){n.className='sys';n.textContent=m.text}
+      else{n.className='msg'+(m.from===S.me.id?' me':'');n.innerHTML=bodyOf(m)}
+      box.appendChild(n);
+    }
+    if(m.type!=='system')setTick(n,m);
+  });
+  if(S.typing[S.cur])box.insertAdjacentHTML('beforeend','<div class="typing"><i></i><i></i><i></i></div>');
+  if(stick)box.scrollTop=box.scrollHeight;
+}
+$('#msgs').onscroll=e=>{const b=e.target;stick=b.scrollHeight-b.scrollTop-b.clientHeight<120};
+$('#msgs').addEventListener('loadedmetadata',()=>{if(stick)$('#msgs').scrollTop=$('#msgs').scrollHeight},true);
+$('#msgs').addEventListener('load',()=>{if(stick)$('#msgs').scrollTop=$('#msgs').scrollHeight},true);
+$('#msgs').onclick=e=>{if(e.target.tagName==='IMG'&&e.target.classList.contains('media')){$('#lbi').src=e.target.src;modal('#lb',true)}};
+$('#lb').onclick=()=>modal('#lb',false);
+
+function openChat(id){
+  S.cur=id;$('#app').classList.add('in-chat');
+  $('#noChat').hidden=true;$('#chatbox').hidden=false;
+  renderHead();updateBar();renderMsgs();markChat(id);renderList();
+  if(matchMedia('(min-width:721px)').matches&&!$('#bar').hidden)$('#in').focus();
+}
+function closeChat(){S.cur=null;$('#app').classList.remove('in-chat');$('#chatbox').hidden=true;$('#noChat').hidden=false;$('#msgs').dataset.chat='';renderList()}
+$('#list').onclick=e=>{const r=e.target.closest('.row');if(r)openChat(r.dataset.id)};
+$('#q').oninput=renderList;
+$('#back').onclick=closeChat;
+
+// ---------- إرسال نص ----------
+function send(){
+  const i=$('#in'),t=i.value.trim();if(!t||!S.cur)return;
+  i.value='';socket.emit('typing',{to:S.cur,on:false});
+  socket.emit('msg:send',{to:S.cur,type:'text',text:t},r=>{
+    if(!r.ok){toast(r.error);i.value=t;return}
+    stick=true;const p=addMsg(r.msg);renderList();if(S.cur===p)renderMsgs();
+  });
+}
+$('#send').onclick=send;
+$('#in').onkeydown=e=>{if(e.key==='Enter')send()};
+$('#in').oninput=()=>{
+  if(!S.cur)return;socket.emit('typing',{to:S.cur,on:true});
+  clearTimeout(typingOff);const to=S.cur;typingOff=setTimeout(()=>socket.emit('typing',{to,on:false}),2000);
+};
+
+// ---------- ميديا ----------
+function upload(blob,mime,onp){
+  return new Promise((res,rej)=>{
+    const x=new XMLHttpRequest();x.open('POST','/api/upload');
+    x.setRequestHeader('Authorization','Bearer '+localStorage.token);x.setRequestHeader('Content-Type',mime);
+    x.upload.onprogress=e=>{if(e.lengthComputable)onp(Math.round(e.loaded/e.total*100))};
+    x.onload=()=>{let d={};try{d=JSON.parse(x.responseText)}catch{}x.status===200?res(d):rej(new Error(d.error||'فشل الرفع'))};
+    x.onerror=()=>rej(new Error('فشل الاتصال بالسيرفر'));
+    x.send(blob);
+  });
+}
+async function sendMedia(blob,mime,dur,to){
+  try{
+    const d=await upload(blob,mime,p=>toast('جاري الرفع... '+p+'%',true));
+    socket.emit('msg:send',{to,type:d.kind,url:d.url,dur:Math.round(dur||0)},r=>{
+      if(!r.ok)return toast(r.error);
+      toast('تم الإرسال');stick=true;const p=addMsg(r.msg);renderList();if(S.cur===p)renderMsgs();
+    });
+  }catch(e){toast(e.message)}
+}
+$('#attach').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{
+  const to=S.cur;
+  [...e.target.files].forEach(f=>{
+    if(f.size>25*1024*1024)return toast('"'+f.name+'" أكبر من 25 ميجا');
+    sendMedia(f,f.type||'application/octet-stream',0,to);
+  });
+  e.target.value='';
+};
+async function startRec(){
+  if(!navigator.mediaDevices||!window.MediaRecorder)return toast('التسجيل الصوتي محتاج متصفح حديث واتصال آمن (https أو localhost)');
+  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch{return toast('اسمح للمتصفح باستخدام الميكروفون')}
+  const mt=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+  const mr=new MediaRecorder(st,mt?{mimeType:mt}:undefined),chunks=[];
+  rec={mr,cancel:false,t0:Date.now(),to:S.cur};
+  mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{
+    st.getTracks().forEach(t=>t.stop());clearInterval(rec.iv);$('#bar').classList.remove('recording');
+    const r=rec;rec=null;
+    if(r.cancel||!chunks.length)return;
+    const dur=(Date.now()-r.t0)/1000;if(dur<1)return toast('التسجيل قصير جدًا');
+    const type=mr.mimeType||mt||'audio/webm';
+    sendMedia(new Blob(chunks,{type}),type,dur,r.to);
+  };
+  mr.start();$('#bar').classList.add('recording');$('#rt').textContent='0:00';
+  rec.iv=setInterval(()=>{const s=Math.floor((Date.now()-rec.t0)/1000);$('#rt').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(s>=300)stopRec(false)},500);
+}
+function stopRec(cancel){if(!rec)return;rec.cancel=cancel;if(rec.mr.state!=='inactive')rec.mr.stop()}
+$('#mic').onclick=startRec;$('#rcancel').onclick=()=>stopRec(true);$('#rsend').onclick=()=>stopRec(false);
+
+// ---------- إضافة جهة اتصال ----------
+$('#add').onclick=()=>{$('#aid').value='';$('#aerr').textContent='';modal('#m-add',true);$('#aid').focus()};
+$('#aid').oninput=e=>{e.target.value=fmt(e.target.value.replace(/\D/g,'').slice(0,15))};
+$('#aid').onkeydown=e=>{if(e.key==='Enter')$('#asave').click()};
+$('#asave').onclick=()=>{
+  socket.emit('contact:add',$('#aid').value.replace(/\D/g,''),r=>{
+    if(!r.ok){$('#aerr').textContent=r.error;return}
+    S.contacts[r.contact.id]=r.contact;modal('#m-add',false);openChat(r.contact.id);
+  });
+};
+
+// ---------- جروب جديد ----------
+$('#newg').onclick=()=>{
+  $('#gn').value='';$('#gerr').textContent='';
+  const cs=Object.values(S.contacts);
+  $('#gchecks').innerHTML=cs.length?cs.map(c=>`<label class="chk"><input type="checkbox" value="${c.id}">${esc(c.name)}${c.bot?'<span class="botb">بوت</span>':''}</label>`).join(''):'<span class="note">مفيش جهات اتصال لسه، هتقدر تضيف أعضاء بالرقم بعد إنشاء الجروب.</span>';
+  modal('#m-newg',true);$('#gn').focus();
+};
+$('#gcreate').onclick=()=>{
+  const members=[...document.querySelectorAll('#gchecks input:checked')].map(x=>x.value);
+  socket.emit('group:create',{name:$('#gn').value,members},r=>{
+    if(!r.ok){$('#gerr').textContent=r.error;return}
+    S.groups[r.group.id]=r.group;modal('#m-newg',false);openChat(r.group.id);
+  });
+};
+
+// ---------- معلومات الجروب والإدارة ----------
+function renderGrp(){
+  const g=S.groups[S.cur];if(!g){modal('#m-grp',false);return}
+  const adm=g.admins.includes(S.me.id);tmpGPhoto=undefined;
+  const members=g.members.map(u=>{
+    const isA=g.admins.includes(u.id),me=u.id===S.me.id;
+    let acts='';
+    if(adm&&!me){
+      if(!u.bot)acts+=isA?`<button class="btn sm" data-act="demote" data-id="${u.id}">إلغاء الإشراف</button>`:`<button class="btn sm" data-act="promote" data-id="${u.id}">ترقية لمشرف</button>`;
+      if(!isA||u.bot)acts+=`<button class="btn sm" data-act="remove" data-id="${u.id}">إزالة</button>`;
+    }
+    return `<div class="mrow"><div class="av s" style="background:${colorOf(u.id)}">${avHtml(u)}</div><div class="meta"><b>${esc(u.name)}${me?' (أنت)':''}${u.bot?'<span class="botb">بوت</span>':''}${isA?'<span class="botb">مشرف</span>':''}</b></div><div class="acts">${acts}</div></div>`;
+  }).join('');
+  const bots=adm?S.catalog.filter(b=>!g.members.some(m=>m.id===b.id)).map(b=>
+    `<div class="mrow"><div class="meta"><b>${esc(b.name)}</b><span style="white-space:normal">${esc(b.desc)}</span></div><button class="btn sm" data-act="addbot" data-id="${b.id}">إضافة</button></div>`).join(''):'';
+  $('#grp').innerHTML=`
+    <div class="photo"><div class="av" id="gphoto" style="background:${colorOf(g.id)}">${avHtml(g)}</div><div class="meta"><b style="font-size:18px">${esc(g.name)}</b><span>${g.members.length} عضو</span></div></div>
+    ${adm?`<label>اسم الجروب<input id="gname" maxlength="30" value="${esc(g.name)}"></label>
+    <label>صورة الجروب<input type="file" id="gfile" accept="image/*"></label>
+    <label class="chk"><input type="checkbox" id="gonly" ${g.onlyAdmins?'checked':''}>المشرفين فقط يقدروا يرسلوا</label>
+    <button class="btn pri" data-act="gsave">حفظ التعديلات</button>
+    <h2>إضافة عضو بالرقم</h2>
+    <div class="row2"><input id="gadd" inputmode="numeric" dir="ltr" placeholder="رقم من 15 رقم" style="flex:1;min-width:0"><button class="btn" data-act="gaddm">إضافة</button></div>
+    ${bots?`<h2>بوتات جاهزة</h2>${bots}<p class="note">البوتات الخارجية بتضيفها برقمها من خانة "إضافة عضو".</p>`:''}`:''}
+    <div class="err" id="gerr2"></div>
+    <h2>الأعضاء</h2>${members}
+    <div class="row2" style="margin-top:8px"><button class="btn" data-act="leave">مغادرة الجروب</button><button class="btn pri" data-close type="button">إغلاق</button></div>`;
+  $('#grp').querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>modal('#m-grp',false));
+  const f=$('#gfile');if(f)f.onchange=async e=>{const x=e.target.files[0];if(!x||!x.type.startsWith('image/'))return;tmpGPhoto=await resize(x);setAv($('#gphoto'),{id:g.id,name:g.name,photo:tmpGPhoto})};
+  const ga=$('#gadd');if(ga)ga.oninput=e=>{e.target.value=fmt(e.target.value.replace(/\D/g,'').slice(0,15))};
+}
+$('#hmeta').onclick=()=>{if(isG(S.cur)){renderGrp();modal('#m-grp',true)}};
+function gact(evt,payload){socket.emit(evt,Object.assign({id:S.cur},payload),r=>{if(!r.ok){const e=$('#gerr2');if(e)e.textContent=r.error;toast(r.error)}})}
+$('#grp').onclick=e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const act=b.dataset.act,id=b.dataset.id;
+  if(act==='promote')gact('group:role',{member:id,admin:true});
+  else if(act==='demote')gact('group:role',{member:id,admin:false});
+  else if(act==='remove'){if(confirm('إزالة العضو من الجروب؟'))gact('group:remove',{member:id})}
+  else if(act==='addbot')gact('group:add',{member:id});
+  else if(act==='gaddm'){gact('group:add',{member:$('#gadd').value.replace(/\D/g,'')});$('#gadd').value=''}
+  else if(act==='gsave'){const p={name:$('#gname').value,onlyAdmins:$('#gonly').checked};if(tmpGPhoto!==undefined)p.photo=tmpGPhoto;gact('group:update',p);toast('تم الحفظ')}
+  else if(act==='leave'){if(confirm('تغادر الجروب؟'))socket.emit('group:leave',{id:S.cur},r=>{if(!r.ok)toast(r.error);else toast('غادرت الجروب')})}
+};
+
+// ---------- الإعدادات ----------
+function resize(file){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{const s=128,c=document.createElement('canvas');c.width=c.height=s;const m=Math.min(img.width,img.height);
+      c.getContext('2d').drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,s,s);res(c.toDataURL('image/jpeg',.8))};
+    img.src=URL.createObjectURL(file);
+  });
+}
+function fillPhoto(){setAv($('#sphoto'),{id:S.me.id,name:$('#sname').value||S.me.name,photo:tmpPhoto})}
+function renderBots(){
+  $('#botlist').innerHTML=S.myBots.map(b=>`<div class="mrow"><div class="meta"><b>${esc(b.name)}</b><span dir="ltr" style="text-align:right">${fmt(b.id)}</span></div><button class="btn sm" data-del="${b.id}">حذف</button></div>`).join('')||'<span class="note">مفيش بوتات لسه.</span>';
+}
+function openSettings(){
+  $('#sname').value=S.me.name;$('#snum').value=fmt(S.me.id);tmpPhoto=S.me.photo;$('#serr').textContent='';$('#berr').textContent='';
+  fillPhoto();renderBots();modal('#m-set',true);
+}
+$('#set').onclick=openSettings;$('#mecard').onclick=openSettings;
+$('#sname').oninput=fillPhoto;
+$('#sfile').onchange=async e=>{const f=e.target.files[0];if(!f||!f.type.startsWith('image/'))return;tmpPhoto=await resize(f);fillPhoto()};
+$('#copy2').onclick=()=>copy(S.me.id);
+$('#logout').onclick=logout;
+$('#ssave').onclick=()=>{
+  socket.emit('profile:update',{name:$('#sname').value,photo:tmpPhoto},r=>{
+    if(!r.ok){$('#serr').textContent=r.error;return}
+    S.me.name=$('#sname').value.trim();S.me.photo=tmpPhoto;renderMe();modal('#m-set',false);toast('تم الحفظ');
+  });
+};
+$('#bcreate').onclick=()=>{
+  socket.emit('bot:create',{name:$('#bname').value},r=>{
+    if(!r.ok){$('#berr').textContent=r.error;return}
+    S.myBots.push(r.bot);$('#bname').value='';$('#berr').textContent='';renderBots();
+    $('#tokv').textContent=r.token;modal('#m-tok',true);
+  });
+};
+$('#tokcopy').onclick=()=>copy($('#tokv').textContent);
+$('#botlist').onclick=e=>{
+  const id=e.target.dataset.del;if(!id||!confirm('حذف البوت؟'))return;
+  socket.emit('bot:delete',{id},r=>{if(!r.ok)return toast(r.error);S.myBots=S.myBots.filter(b=>b.id!==id);delete S.contacts[id];renderBots();renderList()});
+};
+
+// ---------- إغلاق النوافذ ----------
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>modal('#'+b.closest('.modal').id,false));
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.hidden=true}));
+addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>m.hidden=true)});
+
+if(localStorage.token)connect();
+</script>
+</body>
+</html>
